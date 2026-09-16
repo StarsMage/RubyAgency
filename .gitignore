@@ -1,0 +1,26 @@
+# Wails binaries and build artifacts
+/build/bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Go workspace / cache files
+*.test
+*.prof
+
+# Dependency directories
+frontend/node_modules/
+frontend/dist/
+
+# IDE / Editor specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# OS specific files
+Thumbs.db
+ehthumbs.db

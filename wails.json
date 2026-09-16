@@ -1,0 +1,12 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "RubyAgency",
+  "outputfilename": "RubyAgency",
+  "frontend:dir": "fronted",
+  "info": {
+    "companyName": "RubyAgency",
+    "productName": "RubyAgency System Monitor",
+    "productVersion": "1.0.0",
+    "copyright": "Copyright © 2026"
+  }
+}

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RubyAgency System Monitor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Принудительно задаем поведение для всей шапки */
+        .header {
+            -webkit-app-region: drag;
+            app-region: drag;
+        }
+        /* Все интерактивные элементы внутри шапки делаем кликабельными */
+        .header button, 
+        .header nav, 
+        .window-controls {
+            -webkit-app-region: no-drag;
+            app-region: no-drag;
+        }
+    </style>
+</head>
+<body>
+    <header class="header" style="display: flex; align-items: center; justify-content: space-between; padding: 0 20px; user-select: none;">
+
+
+        <div class="logo-container" style="display: flex; align-items: center;">
+            <img src="src/assets/logo.png" alt="RubyAgency Logo" class="brand-logo-massive" onerror="this.style.display='none'">
+        </div>
+        
+        
+        <nav class="nav-tabs">
+            <button class="tab-btn active" data-tab="cpu">CPU</button>
+            <button class="tab-btn" data-tab="ram">RAM</button>
+            <button class="tab-btn" data-tab="disk">DISK</button>
+            <button class="tab-btn" data-tab="netw">NETW</button>
+        </nav>
+
+        <div class="window-controls" style="display: flex; gap: 8px; align-items: center;">
+            <button id="min-btn" title="Minimize" style="background: transparent; border: none; color: #ffffff; cursor: pointer; font-size: 16px; padding: 4px 8px;">🗕</button>
+            <button id="max-btn" title="Maximize" style="background: transparent; border: none; color: #ffffff; cursor: pointer; font-size: 16px; padding: 4px 8px;">🗖</button>
+            <button id="close-btn" title="Close" style="background: transparent; border: none; color: #ffffff; cursor: pointer; font-size: 16px; padding: 4px 8px;">✕</button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- CPU TAB -->
+        <!-- CPU TAB -->
+      <!-- CPU TAB -->
+        <div id="cpu-tab" class="tab-pane active">
+            <div style="flex: 0.8; display: flex; flex-direction: column; gap: 16px; overflow-y: auto; padding-right: 8px;">
+                <div id="cpu-general" style="background: rgba(0,0,0,0.25); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);"></div>
+                <div id="cpu-cores" style="background: rgba(0,0,0,0.25); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <span style="color: #a1a1aa; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Per-Core Breakdown</span>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px; color: #a1a1aa; user-select: none;">
+                            <input type="checkbox" id="toggle-cores-chart" style="accent-color: #ff0033; cursor: pointer;"> Use Cores Graphics
+                        </label>
+                    </div>
+                    <div id="cpu-cores-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;"></div>
+                </div>
+            </div>
+            
+            <div style="flex: 1.2; background: rgba(0,0,0,0.25); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <span style="color: #a1a1aa; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Real-Time Load History</span>
+                </div>
+                <div style="flex-grow: 1; position: relative; width: 100%; min-height: 300px;">
+                    <canvas id="cpuChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- RAM TAB (ТЕПЕРЬ С ГРАФИКОМ) -->
+        <div id="ram-tab" class="tab-pane">
+            <div style="flex: 0.8; display: flex; flex-direction: column; gap: 16px; overflow-y: auto; padding-right: 8px;">
+                <div class="pane-header" style="margin-bottom: 0;">
+                    <h2>RAM Usage</h2>
+                    <span class="status-badge">Live</span>
+                </div>
+                <div id="ram-data" class="metric-card" style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.06);">
+                    Loading RAM metrics...
+                </div>
+            </div>
+            
+            <div style="flex: 1.2; background: rgba(0,0,0,0.25); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <span style="color: #a1a1aa; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Real-Time RAM History</span>
+                </div>
+                <div style="flex-grow: 1; position: relative; width: 100%; min-height: 300px;">
+                    <canvas id="ramChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- DISK TAB -->
+        <section id="disk-tab" class="tab-pane">
+            <div class="pane-header"><h2>Disk Partitions</h2><span class="status-badge">Live</span></div>
+            <div id="disk-data" class="metric-card">Loading Disk metrics...</div>
+        </section>
+        
+        <!-- NETWORK TAB -->
+        <!-- NETWORK TAB -->
+        <section id="netw-tab" class="tab-pane">
+            <div class="pane-header">
+                <h2>Network Interfaces & Traffic</h2>
+                <span class="status-badge">Live</span>
+            </div>
+            <div id="netw-data" class="network-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; width: 100%;">
+                Loading Network metrics...
+            </div>
+        </section>
+    </main>
+    <script src="src/app.js"></script>
+</body>
+</html>

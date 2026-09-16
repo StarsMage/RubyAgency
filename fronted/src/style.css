@@ -1,0 +1,299 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Outfit', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    background-color: #0b0709;
+    color: #f4f4f5;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* ─── ШАПКА С МАКСИМАЛЬНЫМ ЛОГОТИПОМ ─── */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 125px;
+    padding: 0 40px;
+    background-color: #12090c;
+    border-bottom: 2px solid #ff0033;
+    box-shadow: 0 15px 40px -5px rgba(255, 0, 51, 0.4);
+    position: relative;
+    z-index: 10;
+    
+    /* Добавь обе строчки для надежного перетаскивания в Wails */
+    -webkit-app-region: drag;
+    --wails-draggable: drag;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+/* ОГРОМНЫЙ И СТАТИЧНЫЙ ЛОГОТИП (БЕЗ ДВИЖЕНИЯ) */
+.brand-logo-massive {
+    height: 95px; /* Занимает почти всю высоту шапки */
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 16px rgba(255, 0, 51, 0.7));
+    /* Никаких анимаций движения — строго неподвижен */
+}
+
+/* ─── ВКЛАДКИ ─── */
+.nav-tabs {
+    display: flex;
+    gap: 16px;
+}
+
+.tab-btn {
+    background: rgba(18, 9, 12, 0.9);
+    border: 1px solid rgba(255, 0, 51, 0.4);
+    color: #a1a1aa;
+    padding: 12px 26px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 14px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.tab-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 0, 51, 0.3), transparent);
+    transition: 0.5s;
+}
+
+.tab-btn:hover::before {
+    left: 100%;
+}
+
+.tab-btn:hover {
+    border-color: #ff0033;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 0, 51, 0.5);
+}
+
+.tab-btn.active {
+    background-color: #ff0033;
+    color: #ffffff;
+    border-color: #ff0033;
+    transform: translateY(-2px);
+    box-shadow: 0 0 25px rgba(255, 0, 51, 0.8);
+}
+
+/* ─── КОНТЕНТ ─── */
+/* ─── КОНТЕНТ И ВКЛАДКИ ─── */
+.main-content {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+    background: radial-gradient(circle at top right, #1f0a10 0%, #0b0709 60%);
+}
+
+.tab-pane {
+    display: none;
+}
+
+/* Базовое активное состояние для всех вкладок */
+.tab-pane.active {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    animation: fadeInScale 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Уникальная сетка в две колонки только для CPU */
+#cpu-tab.active {
+    flex-direction: row;
+    height: calc(100vh - 160px);
+}
+
+/* Для RAM, Disk и Netw возвращаем нормальный поток, чтобы ничего не сжималось */
+#disk-tab.active, 
+#netw-tab.active {
+    height: auto;
+}
+
+/* А для CPU и RAM включаем двухколоночную сетку на всю высоту */
+#cpu-tab.active,
+#ram-tab.active {
+    display: flex !important;
+    flex-direction: row;
+    height: calc(100vh - 160px);
+}
+
+/* ─── КРУГОВЫЕ ИНДИКАТОРЫ ДИСКОВ (CSS CONIC GRADIENT) ─── */
+.disk-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    width: 100%;
+}
+
+.disk-card {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: all 0.3s ease;
+}
+
+.disk-card:hover {
+    border-color: rgba(255, 0, 51, 0.5);
+    box-shadow: 0 8px 25px rgba(255, 0, 51, 0.15);
+}
+
+.disk-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    /* Динамический градиент: от красного (занято) до темно-серого (свободно) */
+    background: conic-gradient(#ff0033 var(--percentage), rgba(255, 255, 255, 0.05) 0deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+}
+
+/* Внутренняя темная дырка для эффекта кольца */
+.disk-circle::before {
+    content: '';
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    background: #150b0f; /* Цвет фона карточки/моля */
+    border-radius: 50%;
+}
+
+.disk-circle-value {
+    position: relative;
+    font-size: 13px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.disk-info {
+    flex-grow: 1;
+}
+
+.disk-info p {
+    font-size: 14px;
+    color: #a1a1aa;
+    padding: 3px 0;
+    border-bottom: none !important;
+    display: flex;
+    justify-content: space-between;
+}
+
+.disk-info strong {
+    color: #ffffff;
+}
+
+.pane-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.tab-pane h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.status-badge {
+    background: rgba(255, 0, 51, 0.15);
+    color: #ff0033;
+    border: 1px solid rgba(255, 0, 51, 0.5);
+    padding: 5px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 20px;
+    text-transform: uppercase;
+}
+
+/* ─── КАРТОЧКИ ─── */
+.metric-card {
+    background: #150b0f;
+    border: 1px solid #2a121a;
+    border-radius: 18px;
+    padding: 32px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
+    transition: all 0.3s ease;
+    animation: slideUp 0.4s ease forwards;
+}
+
+.metric-card:hover {
+    border-color: rgba(255, 0, 51, 0.7);
+    box-shadow: 0 15px 45px rgba(255, 0, 51, 0.2);
+}
+
+.metric-card p {
+    font-size: 16px;
+    padding: 12px 0;
+    color: #d4d4d8;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+}
+
+.metric-card p strong {
+    color: #ffffff;
+}
+
+.metric-card ul {
+    list-style: none;
+}
+
+.metric-card li {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 15px;
+}
+
+/* ─── АНИМАЦИИ ПЕРЕХОДОВ ─── */
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.98) translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
