@@ -400,12 +400,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+
     if (closeBtn) {
-        closeBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (window.runtime && window.runtime.Quit) {
-                window.runtime.Quit();
-            }
-        });
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (window.runtime && window.runtime.WindowHide) {
+                    window.runtime.WindowHide();
+                }
+            });
     }
 });

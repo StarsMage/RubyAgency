@@ -9,3 +9,5 @@ export function GetDiskInfo():Promise<Array<metrics.DiskInfo>>;
 export function GetNetworkInfo():Promise<Array<metrics.NetworkInfo>>;
 
 export function GetRamInfo():Promise<metrics.RamInfo>;
+
+export function ReadyTray():Promise<void>;

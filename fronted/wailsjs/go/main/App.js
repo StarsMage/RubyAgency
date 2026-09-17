@@ -17,3 +17,7 @@ export function GetNetworkInfo() {
 export function GetRamInfo() {
   return window['go']['main']['App']['GetRamInfo']();
 }
+
+export function ReadyTray() {
+  return window['go']['main']['App']['ReadyTray']();
+}

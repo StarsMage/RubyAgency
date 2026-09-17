@@ -1,5 +1,8 @@
 # Wails binaries and build artifacts
-/build/bin/
+/build/
+/build/bin
+build/
+build/bin
 *.exe
 *.exe~
 *.dll
@@ -13,6 +16,8 @@
 # Dependency directories
 frontend/node_modules/
 frontend/dist/
+/fronted/wailsjs
+fronted/wailsjs
 
 # IDE / Editor specific files
 .idea/

@@ -2,11 +2,17 @@ package main
 
 import (
 	"context"
+	_ "embed"
 	"errors"
 
 	//metrics
 	"RubyAgency/internal/metrics"
+	"github.com/wailsapp/wails/v2/pkg/runtime"
+	"github.com/getlantern/systray"
 )
+
+//go:embed build/windows/icon.ico
+var trayIcon []byte
 
 type App struct {
 	ctx context.Context
@@ -19,6 +25,30 @@ func NewApp() *App {
 
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
+	
+	go systray.Run(a.ReadyTray, func(){})
+}
+
+func (a *App) ReadyTray() {
+	systray.SetIcon(trayIcon)
+	systray.SetTitle("RubyAgency")
+	systray.SetTooltip("RA Sys Mon")
+
+	openTray := systray.AddMenuItem("Open","open app")
+	systray.AddSeparator()
+	closeTray := systray.AddMenuItem("Close","full close app")
+
+	go func() {
+		for {
+			select {
+			case <- openTray.ClickedCh: 
+				runtime.WindowShow(a.ctx)
+			case <- closeTray.ClickedCh:
+				systray.Quit()
+				runtime.Quit(a.ctx)
+			}
+		}
+	}()
 }
 
 
